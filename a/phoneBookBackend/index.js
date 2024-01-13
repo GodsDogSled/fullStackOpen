@@ -1,15 +1,43 @@
 
-const requestLogger = (request, response, next) => {
-  console.log('Method:', request.method)
-  console.log('Path:  ', request.path)
-  console.log('Body:  ', request.body)
-  console.log('---')
-  next()
-}
+
+
+// const requestLogger = (request, response, next) => {
+//   console.log('Method:', request.method)
+//   console.log('Path:  ', request.path)
+//   console.log('Body:  ', request.body)
+//   console.log('---')
+//   next()
+// }
+
+
 const express = require('express')
+const morgan = require('morgan')
 const app = express()
 app.use(express.json())
-app.use(requestLogger)
+// app.use(requestLogger)
+// app.use(morgan(function (tokens, req, res) {
+//   return [
+//     tokens.method(req, res),
+//     tokens.url(req, res),
+//     tokens.status(req, res),
+//     tokens.res(req, res, 'content-length'), '-',
+//     tokens['response-time'](req, res), 'ms',
+//     req.body.json(),
+//   ].join(' ')
+// }))
+
+app.use(morgan(function (tokens, req, res) {
+  return [
+    tokens.method(req, res),
+    tokens.url(req, res),
+    tokens.status(req, res),
+    tokens.res(req, res, 'content-length'), '-',
+    tokens['response-time'](req, res), 'ms',
+    JSON.stringify(req.body)
+  ].join(' ')
+}))
+
+
 
 
 
@@ -73,7 +101,7 @@ app.delete('/api/contacts/:id', (request, response) => {
 
 app.post('/api/contacts', (request, response) => {
   const body = request.body
-  console.log(body)
+
 
 
   if (!body.name || !body.number) {
