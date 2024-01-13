@@ -28,11 +28,11 @@ let contacts = [
 ]
 
 const generateId = () => {
-  const maxId = notes.length > 0
-    ? Math.max(...notes.map(n => n.id))
-    : 0
+  // const maxId = notes.length > 0
+  //   ? Math.max(...notes.map(n => n.id))
+  //   : 0
 
-  return maxId + 1;
+  return Math.floor(Math.random() * 99999999);
 }
 
 app.get('/', (request, response) => {
@@ -62,24 +62,29 @@ app.delete('/api/contacts/:id', (request, response) => {
   response.status(204).end()
 })
 
-// app.post('/api/notes', (request, response) => {
-//   const body = request.body
+app.post('/api/contacts', (request, response) => {
+  const body = request.body
+  console.log(body)
 
-//   if (!body.content) {
-//     return response.status(400).json({
-//       error: 'content missing'
-//     })
-//   }
 
-//   const note = {
-//     content: body.content,
-//     important: Boolean(body.important) || false,
-//     id: generateId(),
-//   }
+  if (!body.name || !body.number) {
+    return response.status(404).json({ error: "name or number is missing" })
+  }
 
-//   notes = notes.concat(note)
-//   response.json(note)
-// })
+  if (contacts.find(contact => contact.name === body.name)) {
+    return response.status(404).json({ error: "name is already in phonebook" })
+  }
+
+
+  const contact = {
+    id: generateId(),
+    name: body.name,
+    number: body.number,
+  }
+
+  contacts = contacts.concat(contact)
+  response.json(contact)
+})
 
 app.get('/info', (request, response) => {
   const date = new Date()
