@@ -46,7 +46,7 @@ app.get('/api/contacts', (request, response) => {
 app.get('/api/contacts/:id', (request, response) => {
   const id = Number(request.params.id)
 
-  const contact = contactss.find(contact => contact.id === id)
+  const contact = contacts.find(contact => contact.id === id)
 
   if (contact) {
     response.json(contact)
