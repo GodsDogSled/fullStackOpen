@@ -12,6 +12,7 @@
 
 const express = require('express')
 const morgan = require('morgan')
+app.use(express.static('dist'))
 const app = express()
 app.use(express.json())
 // app.use(requestLogger)
